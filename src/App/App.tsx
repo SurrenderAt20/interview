@@ -3,26 +3,32 @@ import { Weather } from "./Weather";
 import "./app.css";
 
 export const App: FC = () => {
-  //Change: Readability is nice.
+  //Change: Readability and typesafety.
   const [input, setInput] = useState<string | null>(null);
   const [city, setCity] = useState<string | null>(null);
 
-  //Change: A more descriptive name + change of event type because any is weak man.
+  //Change: A more descriptive name + change of event type because 'any' is weak man.
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) =>
     setInput(event.target.value);
 
-  console.log(input);
+  //Change: Creating another handler to avoid inline function
+  const handleShowWeather = () => {
+    setCity(input);
+  };
 
   return (
     <>
       <input
         role="search"
         type="text"
-        value={input as unknown as string}
+        //Change: placeholder for better ux
+        placeholder="Search for a city"
+        //Change: Readability and typesafety.
+        value={input || ""}
         onChange={handleInputChange}
       />
 
-      <button onClick={() => setCity(input)}>Show Weather</button>
+      <button onClick={handleShowWeather}>Show Weather</button>
 
       <Weather city={city} />
     </>
