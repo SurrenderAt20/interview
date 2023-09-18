@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-//Change: Typesafety
+//Change: Defining types
 
 type WeatherProps = {
   city: string | null;
