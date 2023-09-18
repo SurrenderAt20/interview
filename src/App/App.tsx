@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState, FC, ChangeEvent } from "react";
 import { Weather } from "./Weather";
-import type { FC } from "react";
 import "./app.css";
 
 export const App: FC = () => {
-  const [input, setInput] = React.useState(null as unknown as string);
-  const [city, setCity] = React.useState(null as unknown as string);
+  //Change: Readability is nice.
+  const [input, setInput] = useState<string | null>(null);
+  const [city, setCity] = useState<string | null>(null);
 
-  const doStuff = (event: any) => setInput(event.target.value);
+  //Change: A more descriptive name + change of event type because any is weak man.
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setInput(event.target.value);
 
   console.log(input);
 
@@ -17,7 +19,7 @@ export const App: FC = () => {
         role="search"
         type="text"
         value={input as unknown as string}
-        onChange={doStuff}
+        onChange={handleInputChange}
       />
 
       <button onClick={() => setCity(input)}>Show Weather</button>
