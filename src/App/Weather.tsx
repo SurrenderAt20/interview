@@ -1,47 +1,67 @@
-import React from "react"
+import React, { useState } from "react";
 
-const Weather = ( props: any ) => {
-    const [ info, setInfo ] = React.useState( {
-        city: null,
-        temp: null,
-        icon: null, } )
+//Change: Typesafety
 
-    console.log( "info" + JSON.stringify( info ) )
+type WeatherProps = {
+  city: string | null;
+};
 
-    const isPending = React.useRef( false )
+type WeatherInfo = {
+  city: string | null;
+  temp: number | null;
+  icon: string | null;
+};
 
-    React.useLayoutEffect( () => {
-        if ( props.city !== null || isPending.current === false ) {
+const API_KEY = "4c4f0b1876954338598a7be96c66527b";
+const API_URL = "https://api.openweathermap.org";
 
-        isPending.current = true
+//Change: Use of defined types
+const Weather = (props: WeatherProps) => {
+  const [info, setInfo] = useState<WeatherInfo>({
+    city: null,
+    temp: null,
+    icon: null,
+  });
 
-        fetch( `https://api.openweathermap.org/geo/1.0/direct?q=${ props.city }&appid=4c4f0b1876954338598a7be96c66527b` )
-            .then( res => res.json() )
-            .then( data => {
-                console.log( data )
+  const isPending = React.useRef(false);
 
-                fetch( `https://api.openweathermap.org/data/2.5/weather?lat=${ data[ 0 ].lat }&lon=${ data[ 0 ].lon }&units=metric&appid=4c4f0b1876954338598a7be96c66527b` )
-                    .then( res => res.json() )
-                    .then( data => {
-                        console.log( data )
-                        
-                        setInfo( {
-                            city: data.name,
-                            temp: data.main.temp,
-                            icon: `https://openweathermap.org/img/wn/${ data.weather[ 0 ].icon }@2x.png` as any, } ) 
-                        
-                        isPending.current = false } ) } ) } }, [ props.city ] )
+  React.useLayoutEffect(() => {
+    if (props.city !== null || isPending.current === false) {
+      isPending.current = true;
 
-    return  <>
-                <h1>
-                    { info.city }
-                </h1>
+      fetch(`${API_URL}/geo/1.0/direct?q=${props.city}&appid=${API_KEY}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
 
-                <p>
-                    { info.temp && ~~ info.temp } Celcius
-                </p>
+          fetch(
+            `${API_URL}/data/2.5/weather?lat=${data[0].lat}&lon=${data[0].lon}&units=metric&appid=4c4f0b1876954338598a7be96c66527b`
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
 
-                <img src={ info.icon as unknown as string } alt="Icon" />
-            </> }
+              setInfo({
+                city: data.name,
+                temp: data.main.temp,
+                icon: `${API_URL}/img/wn/${data.weather[0].icon}@2x.png` as any,
+              });
 
-export { Weather }
+              isPending.current = false;
+            });
+        });
+    }
+  }, [props.city]);
+
+  return (
+    <>
+      <h1>{info.city}</h1>
+
+      <p>{info.temp && ~~info.temp} Celcius</p>
+
+      <img src={info.icon as unknown as string} alt="Icon" />
+    </>
+  );
+};
+
+export { Weather };
