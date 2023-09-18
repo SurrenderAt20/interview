@@ -1,33 +1,28 @@
-import React from "react"
-
-import { Weather } from "./Weather"
-
-import type { FC } from "react"
-
-import "./app.css"
+import React from "react";
+import { Weather } from "./Weather";
+import type { FC } from "react";
+import "./app.css";
 
 export const App: FC = () => {
-    const [ input, setInput ] = 
-        React.useState( null as unknown as string )
+  const [input, setInput] = React.useState(null as unknown as string);
+  const [city, setCity] = React.useState(null as unknown as string);
 
-    const [ city, setCity ] =
-        React.useState( null as unknown as string )
+  const doStuff = (event: any) => setInput(event.target.value);
 
-    const doStuff = ( event: any ) => 
-        setInput( event.target.value )
+  console.log(input);
 
-    console.log( input )
-    
-    return  <>
-                <input 
-                    role="search"
-                    type="text" 
-                    value={ input as unknown as string } 
-                    onChange={ doStuff }  />
+  return (
+    <>
+      <input
+        role="search"
+        type="text"
+        value={input as unknown as string}
+        onChange={doStuff}
+      />
 
-                <button onClick={ () => setCity( input ) } >
-                    Show Weather
-                </button>
+      <button onClick={() => setCity(input)}>Show Weather</button>
 
-                < Weather city={ city } />
-            </> }
+      <Weather city={city} />
+    </>
+  );
+};
